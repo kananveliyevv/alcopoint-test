@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="az">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AlcoPoint Admin</title>
+    <link rel="icon" href="assets/logo-transparent.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      /* TT Wellingtons - öz serverinizdə yerləşdirin: assets/fonts/ qovluğuna kopyalayın */
+      @font-face {
+        font-family: 'TT Wellingtons';
+        src: url('assets/fonts/TTWellingtons-Light.woff2') format('woff2'),
+             url('assets/fonts/TTWellingtons-Light.woff') format('woff');
+        font-weight: 300;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'TT Wellingtons';
+        src: url('assets/fonts/TTWellingtons-Regular.woff2') format('woff2'),
+             url('assets/fonts/TTWellingtons-Regular.woff') format('woff');
+        font-weight: 400;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'TT Wellingtons';
+        src: url('assets/fonts/TTWellingtons-Medium.woff2') format('woff2'),
+             url('assets/fonts/TTWellingtons-Medium.woff') format('woff');
+        font-weight: 500;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'TT Wellingtons';
+        src: url('assets/fonts/TTWellingtons-Bold.woff2') format('woff2'),
+             url('assets/fonts/TTWellingtons-Bold.woff') format('woff');
+        font-weight: 700;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'TT Wellingtons';
+        src: url('assets/fonts/TTWellingtons-Black.woff2') format('woff2'),
+             url('assets/fonts/TTWellingtons-Black.woff') format('woff');
+        font-weight: 900;
+        font-display: swap;
+      }
+    </style>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body class="admin-body">
+    <div class="admin-login" id="loginScreen">
+      <form class="login-card" id="loginForm">
+        <img src="assets/logo-transparent.png" alt="AlcoPoint" />
+        <p class="eyebrow">Admin panel</p>
+        <h1>Daxil olun</h1>
+        <label>
+          İstifadəçi adı
+          <input name="username" type="text" autocomplete="username" placeholder="İstifadəçi adı" required />
+        </label>
+        <label>
+          Şifrə
+          <input name="password" type="password" autocomplete="current-password" placeholder="Şifrə" required />
+        </label>
+        <p class="form-error" id="loginError"></p>
+        <button class="primary-btn" type="submit">Daxil ol</button>
+        <a class="muted-link" href="index.html">Sayta qayıt</a>
+      </form>
+    </div>
+
+    <div class="admin-shell" id="adminShell" hidden>
+      <aside class="admin-sidebar">
+        <a class="brand admin-brand" href="index.html">
+          <img src="assets/logo-transparent.png" alt="" />
+          <span>alcopoint</span>
+        </a>
+        <nav aria-label="Admin menyu">
+          <a href="#dashboard" data-admin-link>Dashboard</a>
+          <a href="#products" data-admin-link>Məhsullar</a>
+          <a href="#stores" data-admin-link>Filiallar</a>
+          <a href="#gallery" data-admin-link>Qalereya</a>
+          <a href="#careers" data-admin-link>Karyera</a>
+          <a href="#users" data-admin-link>İstifadəçilər</a>
+          <a href="#settings" data-admin-link>Ayarlar</a>
+        </nav>
+        <div class="sidebar-bottom">
+          <a class="outline-btn" href="index.html">Sayta bax</a>
+          <button class="ghost-btn" id="logoutBtn" type="button">Çıxış</button>
+        </div>
+      </aside>
+
+      <main class="admin-main">
+        <section class="admin-view" id="view-dashboard">
+          <div class="admin-heading">
+            <div>
+              <p class="eyebrow">İdarəetmə</p>
+              <h1>Dashboard</h1>
+            </div>
+            <button class="ghost-btn" id="resetDemoBtn" type="button">Məlumatları sıfırla</button>
+          </div>
+          <div class="metric-grid" id="metricGrid"></div>
+          <div class="admin-panel">
+            <h2>Tez baxış</h2>
+            <div class="recent-list" id="recentList"></div>
+          </div>
+        </section>
+
+        <section class="admin-view" id="view-products" hidden>
+          <div class="admin-heading">
+            <div>
+              <p class="eyebrow">Kataloq</p>
+              <h1>Məhsullar</h1>
+            </div>
+            <button class="primary-btn" data-open-form="product" type="button">Yeni məhsul</button>
+          </div>
+          <div class="admin-grid-two">
+            <form class="admin-form" id="productForm" hidden>
+              <h2 id="productFormTitle">Yeni məhsul</h2>
+              <input type="hidden" name="id" />
+              <label>
+                Məhsul adı
+                <input name="name" type="text" required />
+              </label>
+              <div class="form-row">
+                <label>
+                  Kateqoriya
+                  <select name="category" id="productCategorySelect"></select>
+                </label>
+                <label>
+                  Həcm
+                  <input name="volume" type="text" placeholder="700 ml" />
+                </label>
+              </div>
+              <div class="form-row">
+                <label>
+                  Brend
+                  <input name="brand" type="text" />
+                </label>
+                <label>
+                  Mənbə
+                  <input name="source" type="url" placeholder="https://wolt.com/..." />
+                </label>
+              </div>
+              <label>
+                Qısa təsvir
+                <textarea name="description" rows="3"></textarea>
+              </label>
+              <label>
+                Şəkil URL
+                <input name="image" type="url" placeholder="https://..." />
+              </label>
+              <label>
+                Şəkil yüklə
+                <input name="imageFile" type="file" accept="image/*" />
+              </label>
+              <label class="checkbox-line">
+                <input name="featured" type="checkbox" />
+                Populyar məhsul kimi göstər
+              </label>
+              <div class="form-actions">
+                <button class="primary-btn" type="submit">Yadda saxla</button>
+                <button class="ghost-btn" data-cancel-form="product" type="button">Ləğv et</button>
+              </div>
+            </form>
+            <div class="admin-panel">
+              <div class="import-box">
+                <h2>Excel ilə artır</h2>
+                <p>
+                  `.xlsx`, `.xls` və ya `.csv` faylında ad/name, kateqoriya/category,
+                  şəkil/image, brend/brand və həcm/volume sütunlarını oxuyur. Qiymət
+                  sütunu varsa da sayta əlavə edilmir.
+                </p>
+                <div class="import-actions">
+                  <input id="productImportFile" type="file" accept=".xlsx,.xls,.csv,text/csv" />
+                  <button class="ghost-btn" id="importProductsBtn" type="button">İdxal et</button>
+                  <button class="ghost-btn" id="downloadTemplateBtn" type="button">Şablon CSV</button>
+                </div>
+                <div class="wolt-import">
+                  <label>
+                    Wolt linki ilə inteqrasiya
+                    <input id="woltImportUrl" type="url" placeholder="https://wolt.com/en/aze/baku/venue/alkopoint" />
+                  </label>
+                  <button class="ghost-btn" id="importWoltBtn" type="button">Wolt-dan çək</button>
+                </div>
+                <p class="import-status" id="importStatus"></p>
+              </div>
+              <h2>Məhsul siyahısı</h2>
+              <div class="admin-list" id="productList"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-view" id="view-stores" hidden>
+          <div class="admin-heading">
+            <div>
+              <p class="eyebrow">Ünvanlar</p>
+              <h1>Filiallar</h1>
+            </div>
+            <button class="primary-btn" data-open-form="store" type="button">Yeni filial</button>
+          </div>
+          <div class="admin-grid-two">
+            <form class="admin-form" id="storeForm" hidden>
+              <h2 id="storeFormTitle">Yeni filial</h2>
+              <input type="hidden" name="id" />
+              <label>
+                Filial adı
+                <input name="name" type="text" required />
+              </label>
+              <label>
+                Ünvan
+                <textarea name="address" rows="3" required></textarea>
+              </label>
+              <div class="form-row">
+                <label>
+                  Telefon
+                  <input name="phone" type="text" placeholder="+994..." />
+                </label>
+                <label>
+                  İş saatı
+                  <input name="hours" type="text" placeholder="09:00 - 01:00" />
+                </label>
+              </div>
+              <label>
+                Google Maps linki
+                <input name="mapUrl" type="url" placeholder="https://maps.google.com/..." />
+              </label>
+              <div class="form-row">
+                <label>
+                  Latitude
+                  <input name="lat" type="number" step="any" placeholder="40.4093" />
+                </label>
+                <label>
+                  Longitude
+                  <input name="lng" type="number" step="any" placeholder="49.8671" />
+                </label>
+              </div>
+              <p class="form-hint">Ən yaxın filial funksiyası üçün koordinatları Google Maps-dən kopyalayın.</p>
+              <label>
+                Filial şəkli URL
+                <input name="image" type="url" placeholder="https://..." />
+              </label>
+              <label>
+                Filial şəkli yüklə
+                <input name="imageFile" type="file" accept="image/*" />
+              </label>
+              <div class="form-actions">
+                <button class="primary-btn" type="submit">Yadda saxla</button>
+                <button class="ghost-btn" data-cancel-form="store" type="button">Ləğv et</button>
+              </div>
+            </form>
+            <div class="admin-panel">
+              <h2>Filial siyahısı</h2>
+              <div class="admin-list" id="storeList"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-view" id="view-gallery" hidden>
+          <div class="admin-heading">
+            <div>
+              <p class="eyebrow">Media</p>
+              <h1>Qalereya</h1>
+            </div>
+            <button class="primary-btn" data-open-form="gallery" type="button">Yeni media</button>
+          </div>
+          <div class="admin-grid-two">
+            <form class="admin-form" id="galleryForm" hidden>
+              <h2 id="galleryFormTitle">Yeni media</h2>
+              <input type="hidden" name="id" />
+              <label>
+                Başlıq
+                <input name="title" type="text" required />
+              </label>
+              <label>
+                Media tipi
+                <select name="type">
+                  <option value="image">Şəkil</option>
+                  <option value="video">Video</option>
+                </select>
+              </label>
+              <label>
+                Media URL
+                <input name="image" type="url" placeholder="Şəkil və ya video linki" />
+              </label>
+              <label>
+                Şəkil yüklə
+                <input name="imageFile" type="file" accept="image/*" />
+              </label>
+              <label>
+                Video yüklə
+                <input name="videoFile" type="file" accept="video/*" />
+              </label>
+              <div class="form-actions">
+                <button class="primary-btn" type="submit">Yadda saxla</button>
+                <button class="ghost-btn" data-cancel-form="gallery" type="button">Ləğv et</button>
+              </div>
+            </form>
+            <div class="admin-panel">
+              <h2>Qalereya siyahısı</h2>
+              <div class="admin-list" id="galleryList"></div>
+            </div>
+          </div>
+        </section>
+
+
+        <section class="admin-view" id="view-careers" hidden>
+          <div class="admin-heading">
+            <div>
+              <p class="eyebrow">Karyera</p>
+              <h1>Karyera səhifəsi</h1>
+            </div>
+            <button class="primary-btn" data-open-form="career" type="button">Yeni karyera məlumatı</button>
+          </div>
+          <div class="admin-grid-two">
+            <form class="admin-form" id="careerForm" hidden>
+              <h2 id="careerFormTitle">Yeni karyera məlumatı</h2>
+              <input type="hidden" name="id" />
+              <label>
+                Başlıq
+                <input name="title" type="text" required placeholder="Məsələn: Satış məsləhətçisi" />
+              </label>
+              <label>
+                Məlumat
+                <textarea name="description" rows="5" required placeholder="Vakansiya, komanda xəbəri və ya karyera məlumatı"></textarea>
+              </label>
+              <label>
+                Şəkil URL
+                <input name="image" type="url" placeholder="https://..." />
+              </label>
+              <label>
+                Şəkil yüklə
+                <input name="imageFile" type="file" accept="image/*" />
+              </label>
+              <label>
+                Əlaqə / müraciət linki
+                <input name="link" type="text" placeholder="mailto:hr@... və ya WhatsApp/link" />
+              </label>
+              <div class="form-actions">
+                <button class="primary-btn" type="submit">Yadda saxla</button>
+                <button class="ghost-btn" data-cancel-form="career" type="button">Ləğv et</button>
+              </div>
+            </form>
+            <div class="admin-panel">
+              <h2>Karyera məlumatları</h2>
+              <div class="admin-list" id="careerList"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-view" id="view-users" hidden>
+          <div class="admin-heading">
+            <div>
+              <p class="eyebrow">Giriş</p>
+              <h1>İstifadəçilər</h1>
+            </div>
+            <button class="primary-btn" data-open-form="user" type="button">Yeni istifadəçi</button>
+          </div>
+          <div class="admin-grid-two">
+            <form class="admin-form" id="userForm" hidden>
+              <h2 id="userFormTitle">Yeni istifadəçi</h2>
+              <input type="hidden" name="id" />
+              <label>
+                İstifadəçi adı
+                <input name="username" type="text" required />
+              </label>
+              <label>
+                Şifrə
+                <input name="password" type="text" required />
+              </label>
+              <label>
+                Rol
+                <select name="role">
+                  <option value="admin">Admin</option>
+                  <option value="moderator">Moderator</option>
+                  <option value="career">Karyera</option>
+                </select>
+              </label>
+              <div class="form-actions">
+                <button class="primary-btn" type="submit">Yadda saxla</button>
+                <button class="ghost-btn" data-cancel-form="user" type="button">Ləğv et</button>
+              </div>
+            </form>
+            <div class="admin-panel">
+              <h2>Admin istifadəçiləri</h2>
+              <div class="admin-list" id="userList"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-view" id="view-settings" hidden>
+          <div class="admin-heading">
+            <div>
+              <p class="eyebrow">Sayt</p>
+              <h1>Ayarlar</h1>
+            </div>
+          </div>
+          <form class="admin-form settings-form" id="settingsForm">
+            <label>
+              Telefon
+              <input name="phone" type="text" />
+            </label>
+            <label>
+              E-mail
+              <input name="email" type="email" />
+            </label>
+            <label>
+              Instagram linki
+              <input name="instagram" type="url" placeholder="https://www.instagram.com/..." />
+            </label>
+            <label>
+              LinkedIn linki
+              <input name="linkedin" type="url" placeholder="https://www.linkedin.com/company/..." />
+            </label>
+            <label>
+              Wolt linki
+              <input name="wolt" type="url" placeholder="https://wolt.com/en/aze/baku/brand/alcopoint" />
+            </label>
+            <label>
+              Mərkəzi Ofis ünvanı
+              <input name="officeAddress" type="text" placeholder="Aşıq Molla Cümə küçəsi, 1/5" />
+            </label>
+            <div class="form-row">
+              <label>
+                Mərkəzi Ofis iş saatı
+                <input name="officeHours" type="text" placeholder="09:00 - 18:00" />
+              </label>
+              <label>
+                Mağazaların iş saatı
+                <input name="storeHours" type="text" placeholder="09:00 - 01:00" />
+              </label>
+            </div>
+            <label>
+              Ümumi iş saatı / köhnə sahə
+              <input name="hours" type="text" placeholder="09:00 - 01:00" />
+            </label>
+            <button class="primary-btn" type="submit">Ayarları saxla</button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="assets/wolt-products.js"></script>
+    <script src="assets/shared.js"></script>
+    <script src="assets/admin.js"></script>
+  </body>
+</html>
